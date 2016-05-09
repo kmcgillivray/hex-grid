@@ -4,43 +4,23 @@ Properties: width (number), x (number), y (number)
 Description: Creates a hexagon with equilateral sides and with the given width at the given x and y position on the canvas
 */
 
-function Hexagon(coordinates, width, x, y) {
-  this.coordinates = coordinates;
-  this.regularRatio = 2/Math.sqrt(3)
-  this.width = width;
-  this.height = width / this.regularRatio;
-  this.x = x;
-  this.y = y;
-  this.values = hexagonCalc(this.width, this.height);
+function Hexagon(coordinates, width) {
+  this.x = coordinates.x;
+  this.y = coordinates.y;
+  this.z = coordinates.z;
+  this.q = this.x;
+  this.r = this.z;
   this.points = [];
-  this.midpoint = {x: Math.floor(this.x + (this.values.z/2)), y: Math.floor(this.y + this.values.y) }
   this.neighbors = [];
-  this.selected = false;
+  this.width = width || 40;
   this.init();
 }
 
 Hexagon.prototype = (function() {
 
-  function calculatePoints() {
-    this.points.push({x: this.x, y: this.y});
-    this.points.push({x: this.x + this.values.z, y: this.y});
-    this.points.push({x: this.x + this.values.z + this.values.x, y: this.y + this.values.y});
-    this.points.push({x: this.x + this.values.z, y: this.y + this.values.y + this.values.y});
-    this.points.push({x: this.x, y: this.y + this.values.y + this.values.y });
-    this.points.push({x: this.x - this.values.x, y: this.y + this.values.y});
-  }
-
-  function calculateNeighbors() {
-    if (this.coordinates.c > 0) {
-      this.neighbors = [[-1, 0], [0, -1], [1, 0], [1, -1], [0, 1], [-1, -1]];
-    }
-    //if (this.coordinates.r )
-    //  [-1, -1], [0, -1], [1, -1]
-  }
-
   function draw() {
     ctx.strokeStyle = "#E7E7E7";
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.points[0].y);
     for (var i = 1; i < this.points.length; i++) {
@@ -54,13 +34,37 @@ Hexagon.prototype = (function() {
     }
   }
 
+  function calculatePoints() {
+    for (var i = 0; i < 6; i++) {
+      var angleDeg = 60 * i;
+      var angleRad = Math.PI / 180 * angleDeg;
+      this.points.push(
+        {
+          x: this.xPosition + this.width * Math.cos(angleRad),
+          y: this.yPosition + this.width * Math.sin(angleRad)
+        }
+      );
+    }
+  }
+
+  function calculatePosition() {
+    this.xPosition = (window.innerWidth/2) + (this.width * 3/2 * this.q);
+    this.yPosition = (window.innerHeight/2) + (this.width * Math.sqrt(3) * (this.r + this.q/2));
+  }
+
+  function findNeighbors(directions) {
+    // console.log(directions);
+    // console.log("It's a beautiful day in the neighborhood");
+  }
+
   function init() {
+    calculatePosition.call(this);
     calculatePoints.call(this);
-    calculateNeighbors.call(this);
   }
 
   return {
     init: init,
+    findNeighbors: findNeighbors,
     draw: draw
   }
 })();

@@ -4,37 +4,56 @@ Properties: rows (number), columns (number)
 Description: Creates spaced hexagons in a grid with the given number of rows and columns
 */
 
-function HexGrid(rows, columns) {
-  this.rows = rows;
-  this.columns = columns;
-  this.hexes = this.createGrid();
+function HexGrid(size) {
+  this.size = size;
+  this.grid = {};
+  this.directions = [
+     {x:+1, y:-1, z: 0}, {x:+1, y: 0, z:-1}, {x: 0, y:+1, z:-1},
+     {x:-1, y:+1, z: 0}, {x:-1, y: 0, z:+1}, {x: 0, y:-1, z:+1}
+  ];
+  this.init();
 }
 
 HexGrid.prototype = (function() {
 
   function createGrid() {
-    var hexes = [];
-    for (var i = 0; i < this.rows; i++) {
-      for (var j = 0; j < this.columns; j++) {
-        var spacing = 0;
-        if (j % 2 == 0) {
-          var spacing = hexWidth / 2;
+    var count = 0;
+    for (var i = -this.size; i <= this.size; i++) {
+      var max = -(this.size - Math.abs(i));
+      if (i > 0) {
+        max = -max;
+      }
+      for (var j = -this.size; j <= this.size; j++) {
+        if (i <= 0 && j >= max || i >= 0 && j <= max) {
+          var x = i;
+          var z = j;
+          var y = -x-z;
+          if (y == -0) {
+            y = Math.abs(y);
+          }
+          this.grid[count] = new Hexagon({x: x, y: y, z: z}, hexWidth);
+          count++;
         }
-        var hex = new Hexagon({c: j, r: i}, hexWidth, hexWidth * j, hexWidth * i - spacing);
-        hexes.push(hex);
-        console.log(hex.coordinates);
       }
     }
-    return hexes;
   }
 
-  function getHex(c, r) {
-    for (var i = 0; i < this.hexes.length; i++) {
-      if (this.hexes[i].coordinates.c == c && this.hexes[i].coordinates.r == r) {
-        console.log(this.hexes[i]);
-        return this.hexes[i];
+  function getHex(x, y, z) {
+    for (var hex in this.grid) {
+      var currentHex = this.grid[hex];
+      console.log(currentHex);
+      if (currentHex.x == x && currentHex.y == y && currentHex.z == z) {
+        console.log("found it!");
+        console.log(currentHex);
+        return currentHex;
       }
     }
+    // for (var i = 0; i < this.hexes.length; i++) {
+    //   if (this.hexes[i].coordinates.c == c && this.hexes[i].coordinates.r == r) {
+    //     console.log(this.hexes[i]);
+    //     return this.hexes[i];
+    //   }
+    // }
   }
 
   function draw() {
@@ -43,9 +62,16 @@ HexGrid.prototype = (function() {
     }
   }
 
+  function init() {
+    createGrid.call(this);
+    for (var hex in this.grid) {
+      this.grid[hex].findNeighbors(this.directions);
+    }
+  }
+
   return {
-    createGrid: createGrid,
     getHex: getHex,
+    init: init,
     draw: draw
   }
 })();
