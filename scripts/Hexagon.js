@@ -13,6 +13,7 @@ function Hexagon(coordinates, width) {
   this.points = [];
   this.neighbors = [];
   this.width = width || 40;
+  this.color = "blue";
   this.init();
 }
 
@@ -29,7 +30,7 @@ Hexagon.prototype = (function() {
     ctx.closePath();
     ctx.stroke();
     if (this.selected) {
-      ctx.fillStyle = "#E7E7E7";
+      ctx.fillStyle = this.color;
       ctx.fill();
     }
   }
@@ -52,9 +53,15 @@ Hexagon.prototype = (function() {
     this.yPosition = (window.innerHeight/2) + (this.width * Math.sqrt(3) * (this.r + this.q/2));
   }
 
-  function findNeighbors(directions) {
-    // console.log(directions);
-    // console.log("It's a beautiful day in the neighborhood");
+  function findNeighbors(grid, directions) {
+    for (var i = 0; i < directions.length; i++) {
+      var neighbor = grid.getHex(this.x + directions[i].x, this.y + directions[i].y, this.z + directions[i].z);
+      if (neighbor != undefined) {
+        this.neighbors.push(neighbor)
+      }
+    }
+    console.log("It's a beautiful day in the neighborhood");
+    console.log(this);
   }
 
   function init() {

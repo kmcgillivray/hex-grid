@@ -30,9 +30,13 @@ window.onload = function() {
   // Generate a hex grid with the given number of rows
   hexGrid = new HexGrid(3);
 
-  var myHex = hexGrid.getHex(0, 0, 0);
-  console.log(myHex);
+  // Grab one hex
+  var myHex = hexGrid.getHex(0, 3, -3);
+  // Select the hex and its neighbors
   myHex.selected = true;
+  for (var i = 0; i < myHex.neighbors.length; i++) {
+    myHex.neighbors[i].selected = true;
+  }
 
   // Draw everything. Use the first line to enable animation, use the second line to draw only once
   // setInterval(draw, 10);

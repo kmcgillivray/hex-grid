@@ -41,10 +41,7 @@ HexGrid.prototype = (function() {
   function getHex(x, y, z) {
     for (var hex in this.grid) {
       var currentHex = this.grid[hex];
-      console.log(currentHex);
       if (currentHex.x == x && currentHex.y == y && currentHex.z == z) {
-        console.log("found it!");
-        console.log(currentHex);
         return currentHex;
       }
     }
@@ -65,7 +62,7 @@ HexGrid.prototype = (function() {
   function init() {
     createGrid.call(this);
     for (var hex in this.grid) {
-      this.grid[hex].findNeighbors(this.directions);
+      this.grid[hex].findNeighbors(this, this.directions);
     }
   }
 
