@@ -2,19 +2,14 @@
 <html lang="en">
   <head>
     <title>Hex Board</title>
-    <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-    }
-    </style>
+    <link rel="stylesheet" href="styles/main.css">
   </head>
   <body>
+    <div class="buttons">
+      <button id="hex-button">Hex shape</button>
+      <button id="rectangle-button">Rectangle shape</button>
+      <input type="range" id="size-slider" value="3" min="1" max="5">
+    </div>
 
     <script src="scripts/utilities.js"></script>
     <script src="scripts/Canvas.js"></script>

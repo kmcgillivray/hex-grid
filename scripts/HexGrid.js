@@ -4,9 +4,11 @@ Properties: size (number), hexWidth (number)
 Description: Creates a cube coordinate system hex grid with the given number of rows of hexagons
 */
 
-function HexGrid(size, hexWidth) {
+function HexGrid(size, hexWidth, shape) {
   this.size = size;
   this.hexWidth = hexWidth;
+  this.shape = shape || "rectangle";
+  this.center = {x: window.innerWidth/2, y: window.innerHeight/2};
   this.grid = {};
   this.directions = [
      {x:+1, y:-1, z: 0}, {x:+1, y: 0, z:-1}, {x: 0, y:+1, z:-1},
@@ -18,6 +20,32 @@ function HexGrid(size, hexWidth) {
 HexGrid.prototype = (function() {
 
   function createGrid() {
+    this.grid = {};
+    if (this.shape == "hex") {
+      createHexShape.call(this);
+    } else if (this.shape == "rectangle") {
+      createRectangleShape.call(this);
+    }
+  }
+
+  function createRectangleShape() {
+    var width = this.hexWidth + (this.size - 1) * (this.hexWidth * 0.75) * 2;
+    var hexHeight = this.hexWidth * Math.sqrt(3)/2;
+    var height = (hexHeight * 6 + hexHeight / 2) * 2;
+    console.log(height);
+    this.center = {x: (window.innerWidth - width) / 2 + (this.hexWidth/2), y: window.innerHeight - ((window.innerHeight - height) / 2) - hexHeight};
+    var count = 0;
+    for (var i = 0; i < this.size; i++) {
+      var offset = Math.floor(i/2);
+      for (j = -offset; j < 6 - offset; j++) {
+        this.grid[count] = new Hexagon({x: i, y: j, z: -i-j}, this.hexWidth, this);
+        count++;
+      }
+    }
+  }
+
+  function createHexShape() {
+    this.center = {x: window.innerWidth/2, y: window.innerHeight/2};
     var count = 0;
     for (var i = -this.size; i <= this.size; i++) {
       var max = -(this.size - Math.abs(i));
@@ -32,7 +60,7 @@ HexGrid.prototype = (function() {
           if (y == -0) {
             y = Math.abs(y);
           }
-          this.grid[count] = new Hexagon({x: x, y: y, z: z}, this.hexWidth);
+          this.grid[count] = new Hexagon({x: x, y: y, z: z}, this.hexWidth, this);
           count++;
         }
       }
@@ -63,6 +91,7 @@ HexGrid.prototype = (function() {
 
   return {
     getHex: getHex,
+    createGrid: createGrid,
     init: init,
     draw: draw
   }

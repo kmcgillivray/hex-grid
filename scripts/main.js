@@ -28,17 +28,43 @@ window.onload = function() {
   ctx = gameCanvas.element.ctx;
 
   // Generate a hex grid with the given number of rows
-  hexGrid = new HexGrid(3, hexWidth);
+  hexGrid = new HexGrid(3, hexWidth, "hex");
 
   // Grab one hex
   var myHex = hexGrid.getHex(0, 3, -3);
   // Select the hex and its neighbors
-  myHex.selected = true;
-  for (var i = 0; i < myHex.neighbors.length; i++) {
-    myHex.neighbors[i].selected = true;
-  }
+  // myHex.selected = true;
+  // for (var i = 0; i < myHex.neighbors.length; i++) {
+  //   myHex.neighbors[i].selected = true;
+  // }
+
+  var hexButton = document.getElementById("hex-button");
+  var rectangleButton = document.getElementById("rectangle-button");
+  var sizeSlider = document.getElementById("size-slider");
+  sizeSlider.value = hexGrid.size;
+
+  hexButton.addEventListener('click', function() {
+    hexGrid.shape = "hex";
+    if (sizeSlider.value > 5) {
+      console.log("too big!");
+      sizeSlider.value = 5;
+      hexGrid.size = sizeSlider.value;
+    }
+    sizeSlider.max = 5;
+    hexGrid.createGrid();
+  });
+  rectangleButton.addEventListener('click', function() {
+    hexGrid.shape = "rectangle";
+    sizeSlider.max = 10;
+    hexGrid.createGrid();
+  });
+
+  sizeSlider.addEventListener("change", function() {
+    hexGrid.size = sizeSlider.value;
+    hexGrid.createGrid();
+  }, false);
 
   // Draw everything. Use the first line to enable animation, use the second line to draw only once
-  // setInterval(draw, 10);
-  draw();
+  setInterval(draw, 10);
+  // draw();
 }

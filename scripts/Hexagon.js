@@ -4,12 +4,13 @@ Properties: coordinates (object), width (number)
 Description: Creates a hexagon with equilateral sides and based on the given width and calculates its X and Y position on the page based on an XYZ cube coordinate object.
 */
 
-function Hexagon(coordinates, width) {
+function Hexagon(coordinates, width, grid) {
   this.x = coordinates.x;
   this.y = coordinates.y;
   this.z = coordinates.z;
   this.q = this.x;
   this.r = this.z;
+  this.grid = grid;
   this.points = [];
   this.neighbors = [];
   this.width = width || 40;
@@ -49,8 +50,8 @@ Hexagon.prototype = (function() {
   }
 
   function calculatePosition() {
-    this.xPosition = (window.innerWidth/2) + (this.width * 3/2 * this.q);
-    this.yPosition = (window.innerHeight/2) + (this.width * Math.sqrt(3) * (this.r + this.q/2));
+    this.xPosition = this.grid.center.x + (this.width * 3/2 * this.q);
+    this.yPosition = this.grid.center.y + (this.width * Math.sqrt(3) * (this.r + this.q/2));
   }
 
   function findNeighbors(grid, directions) {
