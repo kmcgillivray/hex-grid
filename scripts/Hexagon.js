@@ -14,7 +14,7 @@ function Hexagon(coordinates, width, grid) {
   this.points = [];
   this.neighbors = [];
   this.width = width || 40;
-  this.color = "blue";
+  this.color = "#30A7BF";
   this.init();
 }
 

@@ -31,7 +31,7 @@ window.onload = function() {
   hexGrid = new HexGrid(3, hexWidth, "hex");
 
   // Grab one hex
-  var myHex = hexGrid.getHex(0, 3, -3);
+  var myHex = hexGrid.getHex(0, 0, 0);
   // Select the hex and its neighbors
   // myHex.selected = true;
   // for (var i = 0; i < myHex.neighbors.length; i++) {
@@ -46,7 +46,6 @@ window.onload = function() {
   hexButton.addEventListener('click', function() {
     hexGrid.shape = "hex";
     if (sizeSlider.value > 5) {
-      console.log("too big!");
       sizeSlider.value = 5;
       hexGrid.size = sizeSlider.value;
     }
@@ -55,13 +54,35 @@ window.onload = function() {
   });
   rectangleButton.addEventListener('click', function() {
     hexGrid.shape = "rectangle";
-    sizeSlider.max = 10;
+    sizeSlider.max = 15;
     hexGrid.createGrid();
   });
 
   sizeSlider.addEventListener("change", function() {
     hexGrid.size = sizeSlider.value;
     hexGrid.createGrid();
+  }, false);
+
+  gameCanvas.element.addEventListener("mousemove", function() {
+    var currentHex;
+    var foundHex;
+    var x = event.pageX;
+    var y = event.pageY;
+
+    for (var hex in hexGrid.grid) {
+      currentHex = hexGrid.grid[hex];
+      currentHex.color = "#30A7BF"
+      currentHex.selected = false;
+      if (pnpoly(currentHex, x, y)) {
+        foundHex = currentHex;
+      }
+    }
+
+    foundHex.selected = true;
+    for (var i = 0; i < foundHex.neighbors.length; i++) {
+      foundHex.neighbors[i].color = "#a1d6e1";
+      foundHex.neighbors[i].selected = true;
+    }
   }, false);
 
   // Draw everything. Use the first line to enable animation, use the second line to draw only once

@@ -7,7 +7,7 @@ Description: Creates a cube coordinate system hex grid with the given number of 
 function HexGrid(size, hexWidth, shape) {
   this.size = size;
   this.hexWidth = hexWidth;
-  this.shape = shape || "rectangle";
+  this.shape = shape || "hex";
   this.center = {x: window.innerWidth/2, y: window.innerHeight/2};
   this.grid = {};
   this.directions = [
@@ -26,6 +26,7 @@ HexGrid.prototype = (function() {
     } else if (this.shape == "rectangle") {
       createRectangleShape.call(this);
     }
+    generateNeighbors.call(this);
   }
 
   function createRectangleShape() {
@@ -82,11 +83,15 @@ HexGrid.prototype = (function() {
     }
   }
 
-  function init() {
-    createGrid.call(this);
+  function generateNeighbors() {
     for (var hex in this.grid) {
       this.grid[hex].findNeighbors(this, this.directions);
     }
+  }
+
+  function init() {
+    createGrid.call(this);
+    generateNeighbors.call(this);
   }
 
   return {
