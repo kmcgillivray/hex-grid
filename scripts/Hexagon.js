@@ -1,7 +1,7 @@
 /*
 Class: Hexagon
-Properties: width (number), x (number), y (number)
-Description: Creates a hexagon with equilateral sides and with the given width at the given x and y position on the canvas
+Properties: coordinates (object), width (number)
+Description: Creates a hexagon with equilateral sides and based on the given width and calculates its X and Y position on the page based on an XYZ cube coordinate object.
 */
 
 function Hexagon(coordinates, width) {

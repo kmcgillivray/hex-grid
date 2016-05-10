@@ -1,11 +1,12 @@
 /*
 Class: HexGrid
-Properties: rows (number), columns (number)
-Description: Creates spaced hexagons in a grid with the given number of rows and columns
+Properties: size (number), hexWidth (number)
+Description: Creates a cube coordinate system hex grid with the given number of rows of hexagons
 */
 
-function HexGrid(size) {
+function HexGrid(size, hexWidth) {
   this.size = size;
+  this.hexWidth = hexWidth;
   this.grid = {};
   this.directions = [
      {x:+1, y:-1, z: 0}, {x:+1, y: 0, z:-1}, {x: 0, y:+1, z:-1},
@@ -31,7 +32,7 @@ HexGrid.prototype = (function() {
           if (y == -0) {
             y = Math.abs(y);
           }
-          this.grid[count] = new Hexagon({x: x, y: y, z: z}, hexWidth);
+          this.grid[count] = new Hexagon({x: x, y: y, z: z}, this.hexWidth);
           count++;
         }
       }
@@ -45,12 +46,6 @@ HexGrid.prototype = (function() {
         return currentHex;
       }
     }
-    // for (var i = 0; i < this.hexes.length; i++) {
-    //   if (this.hexes[i].coordinates.c == c && this.hexes[i].coordinates.r == r) {
-    //     console.log(this.hexes[i]);
-    //     return this.hexes[i];
-    //   }
-    // }
   }
 
   function draw() {

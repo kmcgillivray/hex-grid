@@ -28,7 +28,7 @@ window.onload = function() {
   ctx = gameCanvas.element.ctx;
 
   // Generate a hex grid with the given number of rows
-  hexGrid = new HexGrid(3);
+  hexGrid = new HexGrid(3, hexWidth);
 
   // Grab one hex
   var myHex = hexGrid.getHex(0, 3, -3);
