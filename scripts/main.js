@@ -30,19 +30,13 @@ window.onload = function() {
   // Generate a hex grid with the given number of rows
   hexGrid = new HexGrid(3, hexWidth, "hex");
 
-  // Grab one hex
-  var myHex = hexGrid.getHex(0, 0, 0);
-  // Select the hex and its neighbors
-  // myHex.selected = true;
-  // for (var i = 0; i < myHex.neighbors.length; i++) {
-  //   myHex.neighbors[i].selected = true;
-  // }
-
+  // Set up interface buttons and interaction
   var hexButton = document.getElementById("hex-button");
   var rectangleButton = document.getElementById("rectangle-button");
   var sizeSlider = document.getElementById("size-slider");
   sizeSlider.value = hexGrid.size;
 
+  // Change the map to a hex shape
   hexButton.addEventListener('click', function() {
     hexGrid.shape = "hex";
     if (sizeSlider.value > 5) {
@@ -52,17 +46,21 @@ window.onload = function() {
     sizeSlider.max = 5;
     hexGrid.createGrid();
   });
+
+  // Change the map to a rectangle shape
   rectangleButton.addEventListener('click', function() {
     hexGrid.shape = "rectangle";
     sizeSlider.max = 15;
     hexGrid.createGrid();
   });
 
+  // Change the size of the map
   sizeSlider.addEventListener("change", function() {
     hexGrid.size = sizeSlider.value;
     hexGrid.createGrid();
   }, false);
 
+  // Show current hex and its neighbors when hovering
   gameCanvas.element.addEventListener("mousemove", function() {
     var currentHex;
     var foundHex;
